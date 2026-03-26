@@ -1,0 +1,51 @@
+{
+  "name": "promptinel",
+  "version": "0.1.0",
+  "description": "LLM prompt monitoring and drift detection tool",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "promptinel": "./bin/promptinel.js"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "build": "tsc",
+    "dev": "node --watch bin/promptinel.js",
+    "lint": "eslint src tests"
+  },
+  "keywords": [
+    "llm",
+    "prompt",
+    "monitoring",
+    "drift",
+    "testing",
+    "ai"
+  ],
+  "author": "diegosantdev (https://github.com/diegosantdev)",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^12.0.0",
+    "node-cron": "^3.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/node-cron": "^3.0.11",
+    "@vitest/coverage-v8": "^1.6.1",
+    "eslint": "^8.56.0",
+    "fast-check": "^3.15.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin",
+    "src",
+    "dashboard",
+    "README.md",
+    "LICENSE"
+  ]
+}
