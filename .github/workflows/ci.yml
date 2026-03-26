@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Tests
+        run: npm test
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Offline replay smoke
+        env:
+          PROMPTINEL_HTTP_MODE: replay
+        run: |
+          node -e "import('./src/utils/replayFetch.js').then(async ({ replayableFetch }) => { try { await replayableFetch({ provider:'openai', url:'https://api.openai.com/v1/chat/completions', init:{ method:'POST', body:'{\"model\":\"gpt-4o-mini\",\"messages\":[{\"role\":\"user\",\"content\":\"hello\"}]}' } }); console.log('Replay fixture found'); } catch (e) { if (String(e.message).includes('fixture not found')) { console.log('Replay mode smoke passed (expected missing fixture)'); process.exit(0); } throw e; } })"

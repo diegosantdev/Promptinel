@@ -1,0 +1,55 @@
+name: Example - Monitor Critical Prompts
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  monitor-prompts:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Promptinel
+        run: npm install -g promptinel
+
+      - name: Restore watchlist and snapshots
+        uses: actions/cache@v4
+        with:
+          path: .promptinel/
+          key: promptinel-${{ github.ref }}-${{ github.run_number }}
+          restore-keys: |
+            promptinel-${{ github.ref }}-
+            promptinel-
+
+      - name: Run monitoring
+        run: promptinel watch
+        env:
+          CI: true
+
+      - name: Generate report
+        if: always()
+        run: promptinel report
+
+      - name: Save results
+        if: always()
+        uses: actions/cache@v4
+        with:
+          path: .promptinel/
+          key: promptinel-${{ github.ref }}-${{ github.run_number }}
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: promptinel-drift-report
+          path: .promptinel/
