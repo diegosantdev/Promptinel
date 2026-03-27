@@ -1,7 +1,5 @@
 name: Promptinel Monitor (Simple)
 
-name: Promptinel Monitor (Simple)
-
 on:
   schedule:
     - cron: '0 */6 * * *'
