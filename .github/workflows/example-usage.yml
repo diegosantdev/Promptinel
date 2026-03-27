@@ -19,8 +19,8 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install Promptinel
-        run: npm install -g promptinel
+      - name: Install dependencies
+        run: npm ci
 
       - name: Restore watchlist and snapshots
         uses: actions/cache@v4
@@ -32,13 +32,13 @@ jobs:
             promptinel-
 
       - name: Run monitoring
-        run: promptinel watch
+        run: node bin/promptinel.js watch
         env:
           CI: true
 
       - name: Generate report
         if: always()
-        run: promptinel report
+        run: node bin/promptinel.js report
 
       - name: Save results
         if: always()
